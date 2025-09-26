@@ -7,7 +7,7 @@
 - Commands:
 ```
 /qcs
-/qcs
+/qcs sound
 ```
 
 > [!IMPORTANT]
