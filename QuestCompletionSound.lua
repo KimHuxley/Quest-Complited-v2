@@ -1,4 +1,5 @@
 local addonName = "QuestCompletionSound"
+local version = "1.0"
 
 local QuestCompletionSoundDB = {
     sound = "Interface\\AddOns\\QuestCompletionSound\\sounds\\questcompleted.ogg"
@@ -41,10 +42,14 @@ frame:SetScript("OnEvent", function(self, event, ...)
     end
 end)
 
-ScanQuests()
-
 local loadedFrame = CreateFrame("Frame")
 loadedFrame:RegisterEvent("VARIABLES_LOADED")
 loadedFrame:SetScript("OnEvent", function()
+    DEFAULT_CHAT_FRAME:AddMessage("|cFF00FF00" .. addonName .. "|r: Loaded (" .. version .. ")")
     ScanQuests()
 end)
+
+SLASH_QCS1 = "/qcs"
+SlashCmdList["QCS"] = function(msg)
+    DEFAULT_CHAT_FRAME:AddMessage("|cFF00FF00" .. addonName .. "|r: Loaded (" .. version .. ")")
+end
