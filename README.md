@@ -1,4 +1,4 @@
-# Quest-Complited-v2
+# QuestComplited SOUND
 
 - Plays the ‘QUEST COMPLETED’ upon quest completion.
 - Displays a chat message with the name of the completed quest.
