@@ -6,12 +6,15 @@ local QuestCompletionSoundDB = {
 }
 
 local previousObjectives = {}
-local previousCompleted = {} -- Tabela do śledzenia ukończonych questów
-local isInitialScan = true -- Flaga do ignorowania pierwszego skanu
+local previousCompleted = {}
+local isInitialScan = true
 
 local function ScanQuests()
     local newStates = {}
     local newCompleted = {}
+    
+    -- Debug: Sprawdź, czy funkcja się wywołuje
+    DEFAULT_CHAT_FRAME:AddMessage("|cFF00FFFF" .. addonName .. "|r: Scanning quests... Initial scan: " .. (isInitialScan and "Yes" or "No"))
     
     for questIndex = 1, GetNumQuestLogEntries() do
         local title, level, tag, isHeader, isCollapsed, isComplete, frequency, questID = GetQuestLogTitle(questIndex)
@@ -19,27 +22,35 @@ local function ScanQuests()
         if not isHeader then
             local id = questID or questIndex
             
-            -- Sprawdź, czy quest jest ukończony (ale nie oddany)
+            -- Debug: Informacje o queście
+            DEFAULT_CHAT_FRAME:AddMessage("|cFF00FFFF" .. addonName .. "|r: Quest [" .. (title or "Unknown") .. "] ID: " .. id .. ", isComplete: " .. (isComplete and "Yes" or "No"))
+            
+            -- Sprawdź ukończenie całego questa
             if isComplete and not previousCompleted[id] and not isInitialScan then
-                PlaySoundFile(QuestCompletionSoundDB.sound)
+                PlaySoundFile(QuestCompletionSoundDB.sound, "Master")
                 DEFAULT_CHAT_FRAME:AddMessage("|cFF00FF00" .. addonName .. "|r: Quest completed! (" .. (title or "Unknown") .. ")")
                 previousCompleted[id] = true
             elseif isComplete then
-                previousCompleted[id] = true -- Aktualizuj stan, ale bez dźwięku
+                previousCompleted[id] = true
             end
             
             -- Sprawdź cele dla nieukończonych questów
             if not isComplete then
                 newStates[id] = newStates[id] or {}
                 
-                for objectiveIndex = 1, GetNumQuestLeaderBoards(questIndex) do
+                local numObjectives = GetNumQuestLeaderBoards(questIndex)
+                DEFAULT_CHAT_FRAME:AddMessage("|cFF00FFFF" .. addonName .. "|r: Quest [" .. (title or "Unknown") .. "] has " .. numObjectives .. " objectives")
+                
+                for objectiveIndex = 1, numObjectives do
                     local text, objectiveType, finished = GetQuestLogLeaderBoard(objectiveIndex, questIndex)
-                    
                     local key = id .. "-" .. objectiveIndex
-                    newStates[key] = (finished == 1) and true or false
+                    newStates[key] = finished and true or false
+                    
+                    -- Debug: Informacje o celu
+                    DEFAULT_CHAT_FRAME:AddMessage("|cFF00FFFF" .. addonName .. "|r: Objective [" .. (text or "Unknown") .. "] Finished: " .. (finished and "Yes" or "No"))
                     
                     if newStates[key] and not previousObjectives[key] and not isInitialScan then
-                        PlaySoundFile(QuestCompletionSoundDB.sound)
+                        PlaySoundFile(QuestCompletionSoundDB.sound, "Master")
                         DEFAULT_CHAT_FRAME:AddMessage("|cFF00FF00" .. addonName .. "|r: Objective completed! (" .. (text or "Unknown") .. ")")
                     end
                 end
@@ -48,7 +59,7 @@ local function ScanQuests()
     end
     
     previousObjectives = newStates
-    isInitialScan = false -- Po pierwszym skanie ustawiamy flagę na false
+    isInitialScan = false
 end
 
 local frame = CreateFrame("Frame", addonName .. "Frame")
@@ -63,11 +74,16 @@ local loadedFrame = CreateFrame("Frame")
 loadedFrame:RegisterEvent("VARIABLES_LOADED")
 loadedFrame:SetScript("OnEvent", function()
     DEFAULT_CHAT_FRAME:AddMessage("|cFF00FF00" .. addonName .. "|r: Loaded (" .. version .. ")")
-    isInitialScan = true -- Ustaw flagę na true przy ładowaniu
+    isInitialScan = true
     ScanQuests()
 end)
 
 SLASH_QCS1 = "/qcs"
 SlashCmdList["QCS"] = function(msg)
     DEFAULT_CHAT_FRAME:AddMessage("|cFF00FF00" .. addonName .. "|r: Loaded (" .. version .. ")")
+    -- Test dźwięku
+    if msg == "test" then
+        PlaySoundFile(QuestCompletionSoundDB.sound, "Master")
+        DEFAULT_CHAT_FRAME:AddMessage("|cFF00FF00" .. addonName .. "|r: Test sound played")
+    end
 end
