@@ -7,6 +7,7 @@
 - Commands:
 ```
 /qcs
+/qcs test
 ```
 
 > [!IMPORTANT]
