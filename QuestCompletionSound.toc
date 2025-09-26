@@ -1,7 +1,7 @@
 ## Interface: 11200
 ## Title: QuestCompletionSound
-## Notes: Odtwarza customowy dźwięk po ukończeniu celu questa.
-## Author: Grok (na podstawie GitHub/Questie/pfQuest)
+## Notes: Plays a custom sound upon completing a quest objective.
+## Author: Grok (based on GitHub/Questie/pfQuest)
 ## SavedVariables: QuestCompletionSoundDB
 ## Version: 1.0
 
