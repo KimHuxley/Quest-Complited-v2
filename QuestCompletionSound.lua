@@ -22,12 +22,14 @@ local function ScanQuests()
         
         -- Pomijamy headers i ukończone questy
         if not isHeader and not isComplete then
-            newStates[questID] = newStates[questID] or {}
+            -- Używamy questIndex jako fallback, jeśli questID jest nil
+            local id = questID or questIndex
+            newStates[id] = newStates[id] or {}
             
             for objectiveIndex = 1, GetNumQuestLeaderBoards(questIndex) do
                 local text, objectiveType, finished = GetQuestLogLeaderBoard(objectiveIndex, questIndex)
                 
-                local key = questID .. "-" .. objectiveIndex
+                local key = id .. "-" .. objectiveIndex
                 newStates[key] = (finished == 1) and true or false
                 
                 -- Sprawdź, czy to nowe ukończenie (było false, teraz true)
@@ -69,7 +71,7 @@ SlashCmdList["QCS"] = function(msg)
             print(" |cFF888888Tip: Użyj podwójnych backslashy w ścieżce, np. Interface\\\\AddOns\\\\...|r")
         else
             print(addonName .. ": Bieżący dźwięk: |cFFFFFF00" .. QuestCompletionSoundDB.sound .. "|r")
-            print("Użycie: |cFF00FF00/qcs sound <ścieżka>|r (np. \"Interface\\\\AddOns\\\\QuestCompletionSound\\\\sounds\\\\ding.ogg\")")
+            print("Użycie: |cFF00FF00/qcs sound <ścieżka>|r (np. \"Interface\\\\AddOns\\\\QuestCompletionSound\\sounds\\ding.ogg\")")
         end
     else
         print(addonName .. ": Odtwarza dźwięk po ukończeniu celu questa.")
