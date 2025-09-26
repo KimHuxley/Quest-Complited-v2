@@ -11,4 +11,4 @@
 ```
 
 > [!IMPORTANT]
-> Only work for Turttle WOW
+> Only work for Turtle WOW
