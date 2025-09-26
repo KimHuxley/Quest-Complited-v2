@@ -60,7 +60,7 @@ ScanQuests()
 -- Slash komendy
 SLASH_QCS1 = "/qcs"
 SlashCmdList["QCS"] = function(msg)
-    local cmd, arg = strsplit(" ", msg:lower(), 2)
+    local cmd, arg = strsplit(" ", string.lower(msg), 2)
     
     if cmd == "sound" then
         if arg and arg ~= "" then
