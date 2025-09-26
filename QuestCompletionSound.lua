@@ -62,7 +62,18 @@ ScanQuests()
 -- Slash komendy
 SLASH_QCS1 = "/qcs"
 SlashCmdList["QCS"] = function(msg)
-    local cmd, arg = strsplit(" ", string.lower(msg), 2)
+    -- Rozbijanie stringu bez strsplit
+    local cmd, arg = "", ""
+    if msg then
+        local spacePos = string.find(msg, " ")
+        if spacePos then
+            cmd = string.sub(msg, 1, spacePos - 1)
+            arg = string.sub(msg, spacePos + 1)
+        else
+            cmd = msg
+        end
+    end
+    cmd = string.lower(cmd)
     
     if cmd == "sound" then
         if arg and arg ~= "" then
