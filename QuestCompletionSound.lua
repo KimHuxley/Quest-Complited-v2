@@ -60,7 +60,7 @@ local function ScanQuests()
     isInitialScan = false
 end
 
--- Główna ramka eventowa
+
 local frame = CreateFrame("Frame", addonName .. "Frame")
 frame:RegisterEvent("QUEST_LOG_UPDATE")
 frame:RegisterEvent("QUEST_WATCH_UPDATE")
@@ -75,7 +75,7 @@ frame:SetScript("OnEvent", function(self, event, arg1)
     end
 end)
 
--- Event ładowania
+
 local loadedFrame = CreateFrame("Frame")
 loadedFrame:RegisterEvent("VARIABLES_LOADED")
 loadedFrame:SetScript("OnEvent", function()
@@ -84,7 +84,7 @@ loadedFrame:SetScript("OnEvent", function()
     ScanQuests()
 end)
 
--- Slash command
+
 SLASH_QCS1 = "/qcs"
 SlashCmdList["QCS"] = function(msg)
     DEFAULT_CHAT_FRAME:AddMessage("|cFF00FF00" .. addonName .. "|r: Loaded (" .. version .. ")")
